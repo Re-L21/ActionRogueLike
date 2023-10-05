@@ -16,10 +16,10 @@ ASExplosiveBarrel::ASExplosiveBarrel()
 	meshComponent->SetCollisionProfileName("PhysicsActor");
 	RootComponent = meshComponent;
 
-	radialForce = CreateDefaultSubobject<URadialForceComponent>("RadialForce");
-	radialForce->ForceStrength = 2000.0f;
-	radialForce->bImpulseVelChange = true;
-	radialForce->SetupAttachment(meshComponent);
+	RadialForce = CreateDefaultSubobject<URadialForceComponent>("RadialForce");
+	RadialForce->ImpulseStrength = 2000.0f;
+	RadialForce->bImpulseVelChange = true;
+	RadialForce->SetupAttachment(meshComponent);
 }
 
 // Called when the game starts or when spawned
