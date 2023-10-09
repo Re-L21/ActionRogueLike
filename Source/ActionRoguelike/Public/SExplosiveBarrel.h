@@ -23,14 +23,12 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* meshComponent;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	URadialForceComponent* RadialForce;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	URadialForceComponent* forceComponent;
 
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
+	virtual void PostInitializeComponents() override;
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	UFUNCTION()
+	void OnActionHit(UPrimitiveComponent* hitComponent, AActor* otherActor, UPrimitiveComponent* otherComponent, FVector normalImpulse, const FHitResult& hit);
 
 };

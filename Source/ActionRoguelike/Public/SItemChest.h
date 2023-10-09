@@ -30,7 +30,7 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* baseMesh;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	UStaticMeshComponent* lidMesh;
 
 	// Called when the game starts or when spawned

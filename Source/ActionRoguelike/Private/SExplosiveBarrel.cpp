@@ -9,30 +9,36 @@
 ASExplosiveBarrel::ASExplosiveBarrel()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	//PrimaryActorTick.bCanEverTick = true;
 
 	meshComponent = CreateDefaultSubobject<UStaticMeshComponent>("MeshComponent");
 	meshComponent->SetSimulatePhysics(true);
-	meshComponent->SetCollisionProfileName("PhysicsActor");
 	RootComponent = meshComponent;
 
-	RadialForce = CreateDefaultSubobject<URadialForceComponent>("RadialForce");
-	RadialForce->ImpulseStrength = 2000.0f;
-	RadialForce->bImpulseVelChange = true;
-	RadialForce->SetupAttachment(meshComponent);
+	forceComponent = CreateDefaultSubobject<URadialForceComponent>("ForceComponent");
+	forceComponent->SetupAttachment(meshComponent);
+
+	forceComponent->SetAutoActivate(false);
+
+	forceComponent->Radius = 750.0f;
+	forceComponent->ImpulseStrength = 2500.0f;
+	forceComponent->bImpulseVelChange = true;
+
+	forceComponent->AddCollisionChannelToAffect(ECC_WorldDynamic);
+	//meshComponent->OnComponentHit.AddDynamic(this, ASExplosiveBarrel::OnActorHit);
+
 }
 
-// Called when the game starts or when spawned
-void ASExplosiveBarrel::BeginPlay()
+void ASExplosiveBarrel::PostInitializeComponents()
 {
-	Super::BeginPlay();
-	
+	Super::PostInitializeComponents();
+
+	meshComponent->OnComponentHit.AddDynamic(this, &ASExplosiveBarrel::OnActionHit);
 }
 
-// Called every frame
-void ASExplosiveBarrel::Tick(float DeltaTime)
+void ASExplosiveBarrel::OnActionHit(UPrimitiveComponent* hitComponent, AActor* otherActor, UPrimitiveComponent* otherComponent, FVector normalImpulse, const FHitResult& hit)
 {
-	Super::Tick(DeltaTime);
-
+	forceComponent->FireImpulse();
 }
+
 
