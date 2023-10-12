@@ -7,6 +7,7 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "SInteractionComponent.h"
+#include "SAttributeComponent.h"
 
 // Sets default values
 ASCharacter::ASCharacter()
@@ -22,6 +23,8 @@ ASCharacter::ASCharacter()
 	cameraComp->SetupAttachment(springArmComp);
 
 	interactionComp = CreateDefaultSubobject<USInteractionComponent>("InteractionComp");
+
+	attributeComp = CreateDefaultSubobject<USAttributeComponent>("AttributeComp");
 
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 
@@ -104,7 +107,7 @@ void ASCharacter::PrimaryAttack()
 {
 	PlayAnimMontage(AttackAnim);
 
-	GetWorldTimerManager().SetTimer(timerHandle_PrimaryAttack, this, &ASCharacter::PrimaryAttack_TimerElapsed, 0.2f);
+	GetWorldTimerManager().SetTimer(timerHandle_PrimaryAttack, this, &ASCharacter::PrimaryAttack_TimerElapsed, 0.3f);
 
 	//GetWorldTimerManager().ClearTimer(timerHandle_PrimaryAttack);
 
@@ -112,15 +115,21 @@ void ASCharacter::PrimaryAttack()
 
 void ASCharacter::PrimaryAttack_TimerElapsed()
 {
-	FVector handLocation = GetMesh()->GetSocketLocation("Muzzle_01");
+	if (ensure(ProjectileClass))
+	{
+		FVector handLocation = GetMesh()->GetSocketLocation("Muzzle_01");
 
-	FTransform spawnTM = FTransform(GetControlRotation(), handLocation);
+		//FVector targetLocation = handLocation + GetControlRotation().Vector();
+		//FRotator targetRotation = (targetLocation - handLocation).Rotation();
 
-	FActorSpawnParameters spawnParams;
-	spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-	spawnParams.Instigator = this;
+		FTransform spawnTM = FTransform(GetControlRotation(), handLocation);
 
-	GetWorld()->SpawnActor<AActor>(ProjectileClass, spawnTM, spawnParams);
+		FActorSpawnParameters spawnParams;
+		spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+		spawnParams.Instigator = this;
+
+		GetWorld()->SpawnActor<AActor>(ProjectileClass, spawnTM, spawnParams);
+	}
 }
 
 void ASCharacter::PrimaryInteract()

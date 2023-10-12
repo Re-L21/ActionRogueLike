@@ -21,6 +21,9 @@ public:
 
 protected:
 
+	UFUNCTION()
+	void OnActorOverlap(UPrimitiveComponent* overlappedComponent, AActor* otherActor, UPrimitiveComponent* otherComp, int32 otherBodyIndex, bool bFromSweep, const FHitResult& sweepResult);
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	USphereComponent* sphereComp;
 
