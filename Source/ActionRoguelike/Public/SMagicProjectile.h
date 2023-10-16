@@ -21,6 +21,9 @@ public:
 
 protected:
 
+	UPROPERTY(EditDefaultsOnly, Category = "Damage")
+	float damage;
+
 	UFUNCTION()
 	void OnActorOverlap(UPrimitiveComponent* overlappedComponent, AActor* otherActor, UPrimitiveComponent* otherComp, int32 otherBodyIndex, bool bFromSweep, const FHitResult& sweepResult);
 

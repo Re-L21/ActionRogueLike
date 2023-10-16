@@ -23,15 +23,20 @@ protected:
 	TSubclassOf<AActor> ProjectileClass;
 
 	UPROPERTY(EditAnywhere, Category = "Attack")
+	TSubclassOf<AActor> BlackHoleProjectileClass;
+
+	UPROPERTY(EditAnywhere, Category = "Attack")
+	TSubclassOf<AActor> DashProjectileClass;
+
+	UPROPERTY(EditAnywhere, Category = "Attack")
 	UAnimMontage* AttackAnim;
 
 	FTimerHandle timerHandle_PrimaryAttack;
+	FTimerHandle timerHandle_BlackholeAttack;
+	FTimerHandle timerHandle_Dash;
 
-public:
-	// Sets default values for this character's properties
-	ASCharacter();
-
-protected:
+	UPROPERTY(EditDefaultsOnly, Category = "Attack")
+	float attackAnimDelay;
 
 	UPROPERTY(VisibleAnywhere)
 	USpringArmComponent* springArmComp;
@@ -45,21 +50,30 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	USAttributeComponent* attributeComp;
 
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
 	void MoveForward(float value);
 	void MoveRight(float value);
 
 	void PrimaryAttack();
-	void PrimaryAttack_TimerElapsed();
+	void PrimaryAttack_TimeElapsed();
+
+	void BlackHoleAttack();
+	void BlackholeAttack_TimeElapsed();
 	
+	void Dash();
+	void Dash_TimeElapsed();
+
+	void SpawnProjectile(TSubclassOf<AActor> clasToSpawn);
+
 	void PrimaryInteract();
 
+	UFUNCTION()
+	void OnHealthChanged(AActor* instigatorActor, USAttributeComponent* owningComponent, float newHealth, float delta);
+
+	virtual void PostInitializeComponents() override;
 
 public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+
+	ASCharacter();
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;

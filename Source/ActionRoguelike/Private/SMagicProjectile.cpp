@@ -26,16 +26,18 @@ ASMagicProjectile::ASMagicProjectile()
 	movementComp->bRotationFollowsVelocity = true;
 	movementComp->bInitialVelocityInLocalSpace = true;
 
+	damage = 20.0f;
+
 }
 
 void ASMagicProjectile::OnActorOverlap(UPrimitiveComponent* overlappedComponent, AActor* otherActor, UPrimitiveComponent* otherComp, int32 otherBodyIndex, bool bFromSweep, const FHitResult& sweepResult)
 {
-	if (otherActor)
+	if (otherActor && otherActor != GetInstigator())
 	{
 		USAttributeComponent* attributeComp = Cast<USAttributeComponent>(otherActor->GetComponentByClass(USAttributeComponent::StaticClass()));
 		if (attributeComp)
 		{
-			attributeComp->ApplyHealthChange(-20.0f);
+			attributeComp->ApplyHealthChange(-damage);
 			
 			Destroy();
 		}
